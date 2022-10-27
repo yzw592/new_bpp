@@ -9,7 +9,7 @@ class GetVideoData {
   static Future getVideoBriefData(String type) async {
     List? res;
     List<VideoBriefModel> videoBriefData = [];
-    res = await requestVideoData('data_2022_10_07hotvideo', 'sort', "综合", 100);
+    res = await requestVideoData('data_2022_10_07hotvideo', 'sort', type, 100);
     for (var item in res!) {
       Map<String, dynamic> jsonItem = json.decode(item.toString());
       videoBriefData.add(VideoBriefModel(

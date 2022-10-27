@@ -125,6 +125,7 @@ class _RankDrawerState extends State<RankDrawer> {
           MaterialPageRoute(
               builder: (BuildContext context) =>
                   VideoListItem(widget.rankList[index])));
+      print(widget.rankList[index]);
     }
   }
 }
