@@ -12,7 +12,7 @@ class CustomButton extends StatefulWidget {
 }
 
 class _CusterButtonState extends State<CustomButton> {
-  List<Color> buttonColor = [Colors.white, const Color(0xFFE0E0E0)]; //表示选择的颜色和没选择按钮的颜色
+  List<Color> buttonColor = [Colors.white, Colors.grey[200]!]; //表示选择的颜色和没选择按钮的颜色
   List<Color> textColor = [Colors.red, Colors.black];
 
   @override
@@ -26,7 +26,7 @@ class _CusterButtonState extends State<CustomButton> {
         height: 35,
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
-            color: Colors.grey[300], borderRadius: BorderRadius.circular(20)),
+            color: Colors.grey[200], borderRadius: BorderRadius.circular(20)),
         child: getButtonItem());
   }
 
@@ -38,23 +38,29 @@ class _CusterButtonState extends State<CustomButton> {
   }
 
   Widget getButton(String buttonName, Color buttonColor, Color textColor) {
-    return Container(
-      width: 35,
-      height: 30,
-      decoration: BoxDecoration(
-          color: buttonColor, borderRadius: BorderRadius.circular(12)),
-      child: TextButton(
-        onPressed: buttonColor == Colors.white ? null : _selectButton,
-        style: ButtonStyle(
-          overlayColor:
-              MaterialStateColor.resolveWith((states) => Colors.transparent),
-          padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
-          //设置按钮的大小
-          minimumSize: MaterialStateProperty.all(const Size(5, 5)),
-        ),
-        child: Text(
-          buttonName,
-          style: TextStyle(color: textColor, fontSize: 12),
+    return PhysicalModel(
+      color: Colors.grey[200]!,
+      elevation: buttonColor == Colors.white ? 1 : 0,
+      borderRadius: BorderRadius.circular(12),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 500),
+        width: 35,
+        height: 30,
+        decoration: BoxDecoration(
+            color: buttonColor, borderRadius: BorderRadius.circular(12)),
+        child: TextButton(
+          onPressed: buttonColor == Colors.white ? null : _selectButton,
+          style: ButtonStyle(
+            overlayColor:
+                MaterialStateColor.resolveWith((states) => Colors.transparent),
+            padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+            //设置按钮的大小
+            minimumSize: MaterialStateProperty.all(const Size(5, 5)),
+          ),
+          child: Text(
+            buttonName,
+            style: TextStyle(color: textColor, fontSize: 13),
+          ),
         ),
       ),
     );

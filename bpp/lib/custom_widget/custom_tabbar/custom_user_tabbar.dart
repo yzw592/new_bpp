@@ -5,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../charts/linear_chart.dart';
 import '../../model/user_model/user_week_data.dart';
 
-
 class CustomTabBar extends StatefulWidget {
   final UserWeekData userWeekData;
   const CustomTabBar(this.userWeekData, {super.key});
@@ -29,6 +28,8 @@ class _CustomTabBarState extends State<CustomTabBar>
     Colors.black,
     Colors.black
   ];
+  List<double> textSize = [14, 12, 12, 12];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -80,13 +81,16 @@ class _CustomTabBarState extends State<CustomTabBar>
     if (index != 0) {
       buttonColor = [Colors.white, Colors.white, Colors.white, Colors.white];
       textColor = [Colors.black, Colors.black, Colors.black, Colors.black];
+      textSize = [12, 12, 12, 12];
       buttonColor[index - 1] = Colors.red;
       textColor[index - 1] = Colors.white;
+      textSize[index - 1] = 14;
+      setState(() {});
     } else {
       buttonColor = [Colors.red, Colors.white, Colors.white, Colors.white];
       textColor = [Colors.white, Colors.black, Colors.black, Colors.black];
+      textSize = [15, 12, 12, 12];
     }
-    setState(() {});
   }
 
   Widget getTabBar() {
@@ -108,29 +112,31 @@ class _CustomTabBarState extends State<CustomTabBar>
               const Tab(
                 child: Text(
                   "数据纬度",
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.black,fontSize: 15),
                 ),
               ),
-              getTabBarItem("粉丝", buttonColor[0], textColor[0]),
-              getTabBarItem("播放量", buttonColor[1], textColor[1]),
-              getTabBarItem("点赞", buttonColor[2], textColor[2]),
-              getTabBarItem("充电", buttonColor[3], textColor[3]),
+              getTabBarItem("粉丝", buttonColor[0], textColor[0], textSize[0]),
+              getTabBarItem("播放量", buttonColor[1], textColor[1], textSize[1]),
+              getTabBarItem("点赞", buttonColor[2], textColor[2], textSize[2]),
+              getTabBarItem("充电", buttonColor[3], textColor[3], textSize[3]),
             ]),
       ),
     );
   }
 
-  Widget getTabBarItem(String type, Color buttonColor, Color textColor) {
+  Widget getTabBarItem(String type, Color buttonColor, Color textColor, double textSize) {
     return Tab(
-      child: Container(
-        width: 50,
-        height: 20,
+      child: AnimatedContainer(
+        duration: const Duration(seconds: 1),
+        width: 60,
+        height: 24,
         alignment: Alignment.center,
+        padding: const EdgeInsets.all(2),
         decoration: BoxDecoration(
-            color: buttonColor, borderRadius: BorderRadius.circular(10)),
+            color: buttonColor, borderRadius: BorderRadius.circular(15)),
         child: Text(
           type,
-          style: TextStyle(color: textColor, fontSize: 12),
+          style: TextStyle(color: textColor, fontSize: textSize),
         ),
       ),
     );

@@ -1,7 +1,5 @@
 import 'package:bppnew/custom_widget/custom_get_sex/custom_get_sex.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import '../custom_widget/custom_appbar/custom_appbar.dart';
 import '../custom_widget/custom_border/custom_border.dart';
 import '../custom_widget/custom_loading/custom_loading.dart';
@@ -10,7 +8,6 @@ import '../custom_widget/custom_tabbar/custom_user_tabbar.dart';
 import '../get_data/get_user_data/get_user_data.dart';
 import '../model/user_model/user_model.dart';
 import '../model/user_model/user_week_data.dart';
-
 
 class UserDetail extends StatefulWidget {
   final UserModel user;
@@ -73,15 +70,25 @@ class _UserDetailState extends State<UserDetail> {
   }
 
   Widget getHead() {
-    return Container(
-        margin: const EdgeInsets.only(left: 10, bottom: 5, top: 10),
-        width: 60,
-        height: 60,
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(35)),
-          image: DecorationImage(
-              image: NetworkImage(widget.user.picUrl.toString())),
-        ));
+    return Padding(
+      padding: const EdgeInsets.only(top: 15, left: 10, right: 5),
+      child: Hero(
+        tag: widget.user.picUrl.toString(),
+        child: PhysicalModel(
+          elevation: 5,
+          color: Colors.grey,
+          borderRadius: BorderRadius.circular(30),
+          child: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(35)),
+                image: DecorationImage(
+                    image: NetworkImage(widget.user.picUrl.toString())),
+              )),
+        ),
+      ),
+    );
   }
 
   Widget getDetail() {
@@ -105,11 +112,16 @@ class _UserDetailState extends State<UserDetail> {
             style: TextStyle(color: Colors.grey[600], fontSize: 16),
           ),
         ),
-        CustomGetSex(sex: widget.user.sex, left: 5 ,top: 15, size: 15,)
+        CustomGetSex(
+          sex: widget.user.sex,
+          left: 5,
+          top: 15,
+          size: 15,
+        )
       ],
     );
   }
-  
+
   Widget getIdentity() {
     return Container(
       padding: const EdgeInsets.only(left: 10),

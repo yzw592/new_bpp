@@ -11,40 +11,49 @@ class PieCharts extends StatefulWidget {
   State<PieCharts> createState() => _PieChartState();
 }
 
-class _PieChartState extends State<PieCharts> {
+class _PieChartState extends State<PieCharts>  with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Center(
-      child: SizedBox(
-        height: 177,
-        child: getChart(),
-      ),
-    );
+        child: SizedBox(
+            height: MediaQuery.of(context).size.width / 2,
+            width: MediaQuery.of(context).size.width / 2,
+            child: getChart()));
   }
 
-  Widget getChart(){
+
+  Widget getChart() {
     List<PieModel> dataList = [
-      PieModel("收藏", int.parse(widget.videoDetailModel.favorite), charts.ColorUtil.fromDartColor(Colors.red)),
-      PieModel("点赞", int.parse(widget.videoDetailModel.videoLike), charts.ColorUtil.fromDartColor(Colors.blue)),
-      PieModel("硬币", int.parse(widget.videoDetailModel.coin), charts.ColorUtil.fromDartColor(Colors.green)),
+      PieModel("收藏", int.parse(widget.videoDetailModel.favorite),
+          charts.ColorUtil.fromDartColor(Colors.red)),
+      PieModel("点赞", int.parse(widget.videoDetailModel.videoLike),
+          charts.ColorUtil.fromDartColor(Colors.blue)),
+      PieModel("硬币", int.parse(widget.videoDetailModel.coin),
+          charts.ColorUtil.fromDartColor(Colors.green)),
     ];
-    int sum = int.parse(widget.videoDetailModel.favorite) + int.parse(widget.videoDetailModel.videoLike) + int.parse(widget.videoDetailModel.coin);
+    int sum = int.parse(widget.videoDetailModel.favorite) +
+        int.parse(widget.videoDetailModel.videoLike) +
+        int.parse(widget.videoDetailModel.coin);
     var seriesList = [
       charts.Series<PieModel, String>(
           id: "pie",
           domainFn: (PieModel sales, _) => sales.x,
           measureFn: (PieModel sales, _) => sales.y,
           colorFn: (PieModel sales, _) => sales.color,
-          labelAccessorFn: (PieModel sales, _) =>
-          '${sales.x}:${sales.y}' '\n占比:${(sales.y / sum * 100).toStringAsFixed(2)}%',
+          labelAccessorFn: (PieModel sales, _) => '${sales.x}:${sales.y}'
+              '\n占比:${(sales.y / sum * 100).toStringAsFixed(2)}%',
           data: dataList)
     ];
 
-    return charts.PieChart(seriesList,
+      return charts.PieChart(
+        seriesList,
         animate: true,
         animationDuration: const Duration(seconds: 1),
-
-    );
+      );
   }
-}
 
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+}

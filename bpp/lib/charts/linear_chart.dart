@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flutter/rendering.dart';
 
 import '../custom_widget/custom_button/custom_button.dart';
 import '../model/charts_model/linear_model.dart';
@@ -15,7 +16,7 @@ class LinearChart extends StatefulWidget {
   State<LinearChart> createState() => _LinearChartState();
 }
 
-class _LinearChartState extends State<LinearChart> {
+class _LinearChartState extends State<LinearChart> with AutomaticKeepAliveClientMixin{
   final listenButton = StreamController();
   Color color = const Color(0xffffffff);
   @override
@@ -120,9 +121,14 @@ class _LinearChartState extends State<LinearChart> {
         const SizedBox(
           width: 100,
         ),
-        SizedBox(
+        Container(
+          padding: const EdgeInsets.all(8),
             height: 250, child: charts.LineChart(seriesList, animate: true)), //绘制图表
       ],
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

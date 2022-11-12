@@ -91,7 +91,7 @@ class _VideoListItemState extends State<VideoListItem> {
       children: [
         Stack(
           children: [
-            getHead(), //得到头像
+            getHead(), //得到视频方面
             getRankLabel(), //得到排行榜小图标
           ],
         ),
@@ -101,17 +101,20 @@ class _VideoListItemState extends State<VideoListItem> {
   }
 
   Widget getHead() {
-    return Container(
-        width: 120,
-        height: 80,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: NetworkImage(
-                    'https://${videoBriefModel[flag].videoPicUrl}'),
-                fit: BoxFit.cover),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(15),
-            )));
+    return Hero(
+      tag: videoBriefModel[flag].videoPicUrl,
+      child: Container(
+          width: 120,
+          height: 80,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: NetworkImage(
+                      'https://${videoBriefModel[flag].videoPicUrl}'),
+                  fit: BoxFit.cover),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(15),
+              ))),
+    );
   }
 
   Widget getRankLabel() {

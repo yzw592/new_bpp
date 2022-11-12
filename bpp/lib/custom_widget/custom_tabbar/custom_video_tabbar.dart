@@ -63,7 +63,7 @@ class _CustomVideoTabBarState extends State<CustomVideoTabBar>
           }
         case 1:
           {
-            pageHeight = 91.0 * widget.userDetailModel.totalVideo.length;
+            pageHeight = 100.0 * widget.userDetailModel.totalVideo.length;
             page = pageIndex;
             break;
           }
@@ -78,14 +78,9 @@ class _CustomVideoTabBarState extends State<CustomVideoTabBar>
     }
   }
 
-  Tab getTab(
-    String title,
-  ) {
+  Tab getTab(String title) {
     return Tab(
-      child: Text(
-        title,
-        style: const TextStyle(color: Colors.black),
-      ),
+      child: Text(title, style: const TextStyle(color: Colors.black)),
     );
   }
 
@@ -94,6 +89,7 @@ class _CustomVideoTabBarState extends State<CustomVideoTabBar>
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: widget.userDetailModel.totalVideo.length,
+        itemExtent: 96,
         itemBuilder: (BuildContext context, int index) {
           return Container(
             decoration: const BoxDecoration(
@@ -118,16 +114,23 @@ class _CustomVideoTabBarState extends State<CustomVideoTabBar>
   }
 
   Widget getVideoPhoto(int index) {
-    return Container(
-      height: 80,
-      width: 120,
-      margin: const EdgeInsets.only(left: 10, bottom: 5, top: 5),
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: NetworkImage(
-                  "https:${widget.userDetailModel.totalVideo[index]['pic'].toString().substring(5)}"),
-              fit: BoxFit.cover),
-          borderRadius: const BorderRadius.all(Radius.circular(20))),
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, bottom: 5, top: 5),
+      child: PhysicalModel(
+        elevation: 4,
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          height: 80,
+          width: 120,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: NetworkImage(
+                      "https:${widget.userDetailModel.totalVideo[index]['pic'].toString().substring(5)}"),
+                  fit: BoxFit.cover),
+              borderRadius: const BorderRadius.all(Radius.circular(20))),
+        ),
+      ),
     );
   }
 
@@ -198,7 +201,7 @@ class _CustomVideoTabBarState extends State<CustomVideoTabBar>
         const SizedBox(
           width: 8,
         ),
-        getComment(index),//得到用户评论
+        getComment(index), //得到用户评论
         const SizedBox(
           width: 5,
         ),
@@ -213,16 +216,22 @@ class _CustomVideoTabBarState extends State<CustomVideoTabBar>
   Widget getCommentUser(int index) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                      "https://${widget.videoDetailModel.detailComment[index]['用户头像'].split("//")[1]}")),
-              borderRadius: BorderRadius.circular(30)),
-          height: 60,
-          width: 60,
+        PhysicalModel(
+          elevation: 4,
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+          child: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(
+                        "https://${widget.videoDetailModel.detailComment[index]['用户头像'].split("//")[1]}")),
+                borderRadius: BorderRadius.circular(30)),
+            height: 60,
+            width: 60,
+          ),
         ),
         const SizedBox(
           height: 5,
@@ -241,20 +250,25 @@ class _CustomVideoTabBarState extends State<CustomVideoTabBar>
 
   Widget getComment(int index) {
     return Expanded(
-          child: Text(
-        widget.videoDetailModel.detailComment[index]['评论'],
-        overflow: TextOverflow.ellipsis,
-        maxLines: 3,
-            style: const TextStyle(fontSize: 15),
-      ));
+        child: Text(
+      widget.videoDetailModel.detailComment[index]['评论'],
+      overflow: TextOverflow.ellipsis,
+      maxLines: 3,
+      style: const TextStyle(fontSize: 15),
+    ));
   }
 
-  Widget getLike(int index){
-    return  Column(
+  Widget getLike(int index) {
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.thumb_up_alt_outlined, color: Colors.pink[200],),
-        const SizedBox(height: 5,),
+        Icon(
+          Icons.thumb_up_alt_outlined,
+          color: Colors.pink[200],
+        ),
+        const SizedBox(
+          height: 5,
+        ),
         Text(widget.videoDetailModel.detailComment[index]['点赞人数'].toString()),
       ],
     );

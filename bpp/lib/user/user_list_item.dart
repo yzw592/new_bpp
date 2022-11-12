@@ -1,4 +1,5 @@
 import 'package:bppnew/user/user_detail.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../custom_widget/custom_appbar/custom_appbar.dart';
@@ -55,22 +56,25 @@ class _UserListItemState extends State<UserListItem> {
   }
 
   Widget getItem() {
-    return ListView.builder(
-        controller: controller,
-        itemExtent: 100,
-        itemCount: data.length,
-        itemBuilder: (BuildContext context, int index) {
-          return TextButton(
-            child: getHead(data[index]),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          UserDetail(data[index])));
-            },
-          );
-        });
+    return CupertinoScrollbar(
+      controller: controller,
+      child: ListView.builder(
+          controller: controller,
+          itemExtent: 100,
+          itemCount: data.length,
+          itemBuilder: (BuildContext context, int index) {
+            return TextButton(
+              child: getHead(data[index]),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            UserDetail(data[index])));
+              },
+            );
+          }),
+    );
   }
 
   Widget getHead(UserModel user) {
@@ -82,16 +86,24 @@ class _UserListItemState extends State<UserListItem> {
       padding: const EdgeInsets.only(left: 5, bottom: 4, top: 2),
       child: Row(
         children: <Widget>[
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: NetworkImage(
-                      user.picUrl.toString(),
-                    ),
-                    fit: BoxFit.cover),
-                borderRadius: const BorderRadius.all(Radius.circular(20))),
+          Hero(
+            tag: user.picUrl.toString(),
+            child: PhysicalModel(
+              elevation: 1,
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(
+                          user.picUrl.toString(),
+                        ),
+                        fit: BoxFit.cover),
+                    borderRadius: const BorderRadius.all(Radius.circular(20))),
+              ),
+            ),
           ),
           Container(
               padding: const EdgeInsets.only(left: 8),
