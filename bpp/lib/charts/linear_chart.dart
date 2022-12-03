@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter/rendering.dart';
-
 import '../custom_widget/custom_button/custom_button.dart';
 import '../model/charts_model/linear_model.dart';
 import '../model/user_model/user_week_data.dart';
@@ -39,6 +37,7 @@ class _LinearChartState extends State<LinearChart> with AutomaticKeepAliveClient
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return _simpleLine();
   }
 
@@ -48,7 +47,7 @@ class _LinearChartState extends State<LinearChart> with AutomaticKeepAliveClient
     switch (widget.type) {
       case 'fan':
         {
-          if(color == const Color(0xffffffff)){
+          if(color == const Color(0xffffffff)){   //根据颜色判断是增量还是总量返回数据作图
             userData = widget.userWeekData.fan
                 .getRange(1, 8)
                 .map((e) => LinearModel(count++, e))

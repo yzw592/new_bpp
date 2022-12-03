@@ -4,7 +4,6 @@ import 'package:leancloud_storage/leancloud.dart';
 
 import '../../model/video_model/video_model.dart';
 
-
 class GetVideoData {
   static Future getVideoBriefData(String type) async {
     List? res;
@@ -63,7 +62,11 @@ class GetVideoData {
       String tableName, String condition, String key, int returnLimit) async {
     List? res;
     LCQuery<LCObject> query = LCQuery(tableName);
-    query.whereEqualTo(condition, key);
+    if (key == "all"){
+      returnLimit = 1000;
+    }else{
+      query.whereEqualTo(condition, key);
+    }
     query.limit(returnLimit);
     res = await query.find();
     return res;

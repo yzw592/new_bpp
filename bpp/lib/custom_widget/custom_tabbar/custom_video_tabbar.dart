@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bppnew/model/user_model/user_model.dart';
 import 'package:bppnew/model/video_model/video_model.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +8,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class CustomVideoTabBar extends StatefulWidget {
   final VideoDetailModel videoDetailModel;
   final UserDetailModel userDetailModel;
+  final StreamController tipTitleText;
   const CustomVideoTabBar(
-      {Key? key, required this.videoDetailModel, required this.userDetailModel})
+      {Key? key,
+      required this.videoDetailModel,
+      required this.userDetailModel,
+      required this.tipTitleText})
       : super(key: key);
   @override
   State<CustomVideoTabBar> createState() => _CustomVideoTabBarState();
@@ -41,13 +47,15 @@ class _CustomVideoTabBarState extends State<CustomVideoTabBar>
           },
         ),
         SizedBox(
-          height: pageHeight,
-          child: TabBarView(controller: tabController, children: [
-            const Text("页面正在完善"),
-            getOtherVideoPage(), //得到用户其他视频页面
-            getCommentPage(),
-          ]),
-        ),
+            height: pageHeight,
+            child: TabBarView(
+                controller: tabController,
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  const Text("页面正在完善"),
+                  getOtherVideoPage(), //得到用户其他视频页面
+                  getCommentPage(),
+                ])),
       ],
     );
   }
@@ -59,18 +67,21 @@ class _CustomVideoTabBarState extends State<CustomVideoTabBar>
           {
             pageHeight = 100.0;
             page = pageIndex;
+            widget.tipTitleText.sink.add("相关推荐");
             break;
           }
         case 1:
           {
             pageHeight = 100.0 * widget.userDetailModel.totalVideo.length;
             page = pageIndex;
+            widget.tipTitleText.sink.add("用户其他视频");
             break;
           }
         case 2:
           {
             pageHeight = 97.0 * widget.videoDetailModel.detailComment.length;
             page = pageIndex;
+            widget.tipTitleText.sink.add("视频评论");
             break;
           }
       }
@@ -101,6 +112,7 @@ class _CustomVideoTabBarState extends State<CustomVideoTabBar>
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       getVideoName(index), //得到视频名字
                       getSeeAndComment(index), //得到视频播放量喝评论量
@@ -137,7 +149,11 @@ class _CustomVideoTabBarState extends State<CustomVideoTabBar>
   Widget getVideoName(int index) {
     return Container(
       padding: const EdgeInsets.only(left: 8),
-      child: Text(widget.userDetailModel.totalVideo[index]['视频名']),
+      child: Text(
+        widget.userDetailModel.totalVideo[index]['视频名'],
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+      ),
     );
   }
 

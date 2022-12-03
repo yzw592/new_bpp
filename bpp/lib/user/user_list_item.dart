@@ -1,3 +1,4 @@
+import 'package:bppnew/custom_widget/custom_search/custom_search.dart';
 import 'package:bppnew/user/user_detail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,7 @@ class _UserListItemState extends State<UserListItem> {
       appBar: CustomAppBar(
         title: '${widget.title}排行榜',
         backgroundColor: Colors.pink[200],
+        icon: const [CustomSearch(icon: Icon(Icons.search), type: "user",)],
       ),
       body: getBody(),
     );
@@ -64,17 +66,25 @@ class _UserListItemState extends State<UserListItem> {
           itemCount: data.length,
           itemBuilder: (BuildContext context, int index) {
             return TextButton(
-              child: getHead(data[index]),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            UserDetail(data[index])));
+              style: ButtonStyle(
+                overlayColor: MaterialStateProperty.all(Colors.transparent)
+              ),
+              onPressed: () async {
+                UserDetailModel userDetailModel = await GetUserData.getSingleUserData(data[index].uid);
+                jumpToUserDetailPage(userDetailModel);
               },
+              child: getHead(data[index]),
             );
           }),
     );
+  }
+
+  jumpToUserDetailPage(UserDetailModel userDetailModel){
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) =>
+                UserDetail(userDetailModel)));
   }
 
   Widget getHead(UserModel user) {

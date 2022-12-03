@@ -10,7 +10,7 @@ import '../model/user_model/user_model.dart';
 import '../model/user_model/user_week_data.dart';
 
 class UserDetail extends StatefulWidget {
-  final UserModel user;
+  final UserDetailModel user;
 
   const UserDetail(this.user, {super.key});
 

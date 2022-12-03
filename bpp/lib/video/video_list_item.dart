@@ -6,9 +6,9 @@ import '../custom_widget/custom_drawer/custom_drawer.dart';
 import '../custom_widget/custom_loading/custom_loading.dart';
 import '../custom_widget/custom_rank_label/custom_rank_lable.dart';
 import '../custom_widget/custom_return_top/custom_return_top.dart';
+import '../custom_widget/custom_search/custom_search.dart';
 import '../get_data/get_video_data/get_video_data.dart';
 import '../model/video_model/video_model.dart';
-
 
 class VideoListItem extends StatefulWidget {
   final String title;
@@ -40,6 +40,12 @@ class _VideoListItemState extends State<VideoListItem> {
       appBar: CustomAppBar(
         title: '${widget.title}视频排行榜',
         backgroundColor: Colors.pink[200],
+        icon: const [
+          CustomSearch(
+            icon: Icon(Icons.search),
+            type: 'video',
+          )
+        ],
       ),
       body: getBody(),
     );
@@ -83,7 +89,8 @@ class _VideoListItemState extends State<VideoListItem> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (BuildContext context) => VideoDetail(videoBriefModel[index])));
+            builder: (BuildContext context) =>
+                VideoDetail(videoBriefModel[index])));
   }
 
   Widget getItemDetail() {
@@ -91,7 +98,7 @@ class _VideoListItemState extends State<VideoListItem> {
       children: [
         Stack(
           children: [
-            getHead(), //得到视频方面
+            getHead(), //得到视频封面
             getRankLabel(), //得到排行榜小图标
           ],
         ),
@@ -149,6 +156,8 @@ class _VideoListItemState extends State<VideoListItem> {
       ),
       child: Text(
         videoBriefModel[flag].videoName,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
         style: const TextStyle(color: Colors.black, fontSize: 15),
       ),
     );
@@ -208,10 +217,14 @@ class _VideoListItemState extends State<VideoListItem> {
   }
 
   Widget getUserName() {
+    String name = videoBriefModel[flag].userName;
+    if (videoBriefModel[flag].userName.length > 5) {
+      name = "${videoBriefModel[flag].userName.substring(0,5)}···";
+    }
     return Container(
       padding: const EdgeInsets.only(left: 5, top: 8),
       child: Text(
-        videoBriefModel[flag].userName,
+        name,
         style: const TextStyle(fontSize: 12, color: Colors.black),
       ),
     );

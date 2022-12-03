@@ -147,6 +147,7 @@ class _CustomTabBarState extends State<CustomTabBar>
       height: 300,
       width: double.infinity,
       child: TabBarView(
+        physics: const NeverScrollableScrollPhysics(),
         controller: controller,
         children: [
           getChart("fan"),

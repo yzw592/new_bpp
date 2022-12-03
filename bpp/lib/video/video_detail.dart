@@ -26,9 +26,11 @@ class VideoDetail extends StatefulWidget {
 class _UserDetailState extends State<VideoDetail> {
   VideoDetailModel? videoDetailModel;
   UserDetailModel? userDetailModel;
-  StreamController steam = StreamController();
+  StreamController tipTitleSteam = StreamController();
+  StreamController tipTitleText = StreamController();
   double scrollOffset = 0.0;
-  bool flag = false;
+  bool flag = true;
+  String tipTitle = "";
   @override
   void initState() {
     // TODO: implement initState
@@ -43,17 +45,36 @@ class _UserDetailState extends State<VideoDetail> {
         videoDetailModel = value;
       });
     });
-    steam.stream.listen((event) {
+    tipTitleSteam.stream.listen((event) {
+      //监听是否要打开tipTitle标题
+      scrollOffset = event;
+      if (scrollOffset > 0 && flag == true) {
+        //判断是否打开用户其他视频等提醒
         setState(() {
-          scrollOffset = event;
+          flag = !flag;
         });
+      }
+      if (scrollOffset == 0 && flag == false) {
+        //是否关闭
+        setState(() {
+          flag = !flag;
+        });
+      }
+    });
+
+    tipTitleText.stream.listen((event) {
+      //监听打开的是那个标签名字
+      setState(() {
+        tipTitle = event;
+      });
     });
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    steam.close();
+    tipTitleSteam.close();
+    tipTitleText.close();
     super.dispose();
   }
 
@@ -63,34 +84,36 @@ class _UserDetailState extends State<VideoDetail> {
         body: videoDetailModel == null || userDetailModel == null
             ? const CustomLoading()
             : CustomScrollView(slivers: [
-              SliverAppBar(
-                title: const Text("视频详细页面"),
-                backgroundColor: Colors.pink[200],
-                floating: true,
-                snap: true,
-              ),
-              getPageHead(),
-              myHeader(
-                  Column(
-                    children: [
-                      getUserDetail(),
-                      Container(
-                        color: Colors.white,
-                        height: 8,
-                      ), //分割线
-                      const CustomBorder(),
-                    ],
-                  ),
-                  113),
-              getBody(),
-              SliverLayoutBuilder(
-                builder: (BuildContext context,
-                    SliverConstraints constraints) {
-                  steam.sink.add(constraints.scrollOffset);
-                  return SliverToBoxAdapter(child: getCustomVideoTabBar());
-                },
-              ),
-            ]));
+                SliverAppBar(
+                  title: const Text("视频详细页面", style: TextStyle(fontSize: 16),),
+                  backgroundColor: Colors.pink[200],
+                  floating: true,
+                  snap: true,
+                ),
+                getPageHead(),
+                myHeader(
+                    Column(
+                      children: [
+                        getUserDetail(),
+                        Container(
+                          color: Colors.white,
+                          height: 8,
+                        ), //分割线
+                        const CustomBorder(),
+                        getTipTitle(tipTitle)
+                      ],
+                    ),
+                    138),
+                getBody(),
+                SliverLayoutBuilder(
+                  builder:
+                      (BuildContext context, SliverConstraints constraints) {
+                    tipTitleSteam.sink.add(constraints.scrollOffset);
+                    return const SliverToBoxAdapter();
+                  },
+                ),
+                SliverToBoxAdapter(child: getCustomVideoTabBar())
+              ]));
   }
 
   getPageHead() {
@@ -195,6 +218,8 @@ class _UserDetailState extends State<VideoDetail> {
       padding: const EdgeInsets.only(left: 5),
       child: Text(
         widget.videoBriefModel.videoName,
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
         style: const TextStyle(fontSize: 15),
       ),
     );
@@ -230,7 +255,7 @@ class _UserDetailState extends State<VideoDetail> {
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (BuildContext context) =>
-                UserDetail(userDetailModel as UserModel)));
+                UserDetail(userDetailModel!)));
       },
       child: Container(
         color: Colors.white,
@@ -347,6 +372,9 @@ class _UserDetailState extends State<VideoDetail> {
         height: 10,
       ),
       const CustomBorder(), //分割线
+      Container(
+        child: Text("这是一个测试"),
+      ),
       PieCharts(videoDetailModel: videoDetailModel!), //绘制饼图
     ];
   }
@@ -355,13 +383,13 @@ class _UserDetailState extends State<VideoDetail> {
     return CustomVideoTabBar(
         //得到用户全部视频和用户评论
         videoDetailModel: videoDetailModel!,
-        userDetailModel: userDetailModel!);
+        userDetailModel: userDetailModel!,
+        tipTitleText: tipTitleText);
   }
 
   Widget getTitle() {
     return Container(
         alignment: Alignment.center,
-        padding: const EdgeInsets.only(top: 5),
         child: const Text(
           "视频核心数据",
           style: TextStyle(fontSize: 18),
@@ -398,23 +426,35 @@ class _UserDetailState extends State<VideoDetail> {
     );
   }
 
-  Widget getTipTitle(){
-    if(scrollOffset > 0){}
-    return Positioned(
-      left: MediaQuery.of(context).size.width / 2 - 50,
-      top: MediaQuery.of(context).size.height / 2 - 50,
-      child: TweenAnimationBuilder(tween: Tween(begin: 0.0, end: 100.0), duration: Duration(seconds: 1), builder: (BuildContext context, double value, Widget? child){
-        return Container(
-            width:  value,
-            height: value,
-            color: Colors.blue,
-            child:Text("666")
-        );
-      }),
+  Widget getTipTitle(String title) {
+    double size;
+    if (scrollOffset > 0) {
+      size = 25;
+    } else {
+      size = 0;
+    }
+    return PhysicalModel(
+      elevation: 4,
+      color: Colors.grey,
+      child: TweenAnimationBuilder(
+          tween: Tween(end: size),
+          duration: const Duration(seconds: 1),
+          builder: (BuildContext context, double value, Widget? child) {
+            return Container(
+                width: MediaQuery.of(context).size.width,
+                height: value,
+                color: Colors.pink[100],
+                alignment: Alignment.center,
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                ));
+          }),
     );
   }
 }
-
 
 class Header extends SliverPersistentHeaderDelegate {
   late final Widget child;
